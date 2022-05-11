@@ -13,22 +13,23 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="lit-review",
-    version="0.0.9",
-    description="Automate creation of reports and working directories for literature reviews",
+    name="s2i2a",
+    version="0.0.0",
+    description="Sweep to int to arguments. Map parameter sweeps to ints to program arguments. Specifically useful "
+                "for compute canada.",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/Velythyl/litreview",
+    url="https://github.com/Velythyl/s2i2a",
     author="Charlie Gauthier",
     author_email="charlie.gauthier@umontreal.ca",
     license="MIT",
-    packages=find_packages(exclude=("pdfs")),
-    package_data={"litreview": ["*.yaml", "*.md"]},
+    packages=find_packages(),
+    package_data={"s2i2a": ["*.yaml"]},
     include_package_data=True,
-    install_requires=["pyyaml", "beautifulsoup4", "validators", "six", "soupsieve", "twine"],
+    install_requires=[],
     entry_points={
         "console_scripts": [
-            "litreview=litreview.main:main",
+            "s2i2a=s2i2a.main:main",
         ]
     },
 )
