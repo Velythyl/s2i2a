@@ -50,7 +50,7 @@ python3 train.py 'non-sweep argument' another_non-sweep_arg
 You then build a Docker/Singularity image containing said file, and you
 install s2i2a inside that image.
 
-Then you can call at the end of a `.sh` file (say, an SBATCH script containing an iterator integer): 
+Then you can call at the end of a `.sh` file (say, an SBATCH script containing `$SLURM_ARRAY_TASK_ID`): 
 
 ```
 s2i2a i2a 3
