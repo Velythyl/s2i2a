@@ -14,6 +14,11 @@ pip3 install s2i2a
 s2i2a <direction> <command> <sweep arguments>
 ```
 
+The goal is to support all the sweep syntax used by [hydra's](https://github.com/facebookresearch/hydra) default sweeper.
+
+But for now, `s2i2a` just supports sweeps of the shape `arg=val1,val2,val3,...`.
+
+
 A help message is also provided
 
 ```
@@ -21,6 +26,8 @@ s2i2a --help
 ```
 
 ## Sample usage
+
+Call `s2i2a s2i` with all the shell arguments necessary to run your script, plus your script's arguments, plus your sweeps.
 
 ```
 s2i2a s2i python3 train.py 'non-sweep argument' another_non-sweep_arg arg1=val1,val2 arg2=val3,val4,val5
