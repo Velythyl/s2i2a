@@ -67,6 +67,7 @@ def s2i(sweep):
     if contains_no_sweeps:
         with open("s2i.txt", "w") as f:
             f.write(" ".join(sweep))
+            print("Done writing s2i.txt!")
             exit()
 
     command = sweep[:first_index_with_sweep]
