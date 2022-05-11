@@ -56,11 +56,19 @@ def arglist2intfile(arglist, cmd):
         f.write(f"\n{cmd}")
 
 def s2i(sweep):
+    contains_no_sweeps = True
     first_index_with_sweep = 0
     for i, swee in enumerate(sweep):
         if '=' in swee:
             first_index_with_sweep = i
+            contains_no_sweeps = False
             break
+
+    if contains_no_sweeps:
+        with open("s2i.txt", "w") as f:
+            f.write(" ".join(sweep))
+            exit()
+
     command = sweep[:first_index_with_sweep]
     command = " ".join(command)
     sweep = sweep[first_index_with_sweep:]
@@ -76,7 +84,13 @@ def i2a(integer):
     try:
         with open("s2i.txt", "r") as f:
             file = f.readlines()
-        arguments = file[integer].strip().split(" ")
+
+        arguments = file[integer].strip()
+        no_sweep = False
+        if '=' not in arguments:
+            no_sweep = True
+        arguments = arguments.split(" ")
+
         cmd = file[-1].strip()
 
     except FileNotFoundError as e:
@@ -94,7 +108,7 @@ def i2a(integer):
     print(f"\tSWEEP ARGUMENTS `{arguments}`")
     print("Have a great day! Launching now using `execv`.")
 
-    exec(cmd, cmd_args, arguments)
+    exec(cmd, cmd_args, arguments if not no_sweep else [])
 
 def exec(cmd, cmd_args, arguments):
     if cmd_args[0] == "test_s2i2a.py":
@@ -104,7 +118,7 @@ def exec(cmd, cmd_args, arguments):
 
     os.execvp(cmd, [cmd] + cmd_args + arguments)
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("direction", choices=['s2i', 'i2a'], help="Are we doing s2i or i2a")
     parser.add_argument("other", type=str, metavar='N', nargs='*')
@@ -117,3 +131,6 @@ if __name__ == "__main__":
         i2a(parser.other)
     else:
         raise NotImplementedError("Could not match your request?!")
+
+if __name__ == "__main__":
+    main()
