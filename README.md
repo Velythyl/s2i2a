@@ -30,10 +30,12 @@ s2i2a --help
 Call `s2i2a s2i` with all the shell arguments necessary to run your script, plus your script's arguments, plus your sweeps.
 
 ```
-s2i2a s2i python3 train.py 'non-sweep argument' another_non-sweep_arg arg1=val1,val2 arg2=val3,val4,val5
+s2i2a s2i python3 train.py \
+'non-sweep argument' another_non-sweep_arg \
+arg1=val1,val2 arg2=val3,val4,val5
 ```
 
-Generates a `s2i.txt` file in your local directory containing
+This generates a `s2i.txt` file in your local directory containing
 
 ```
 arg1=val1 arg2=val3
@@ -48,13 +50,13 @@ python3 train.py 'non-sweep argument' another_non-sweep_arg
 You then build a Docker/Singularity image containing said file, and you
 install s2i2a inside that image.
 
-Then you can call at the end of a `.sh` file (say, an SBATCH script containing an iterator integer): 
+Then you can call at the end of a `.sh` file (say, an SBATCH script containing `$SLURM_ARRAY_TASK_ID`): 
 
 ```
 s2i2a i2a 3
 ```
 
-This calls `execvp`, replace s2i2a by 
+This calls `execvp`, and replaces `s2i2a`'s process by 
 
 ```
 python3 train.py 'non-sweep argument' another_non-sweep_arg arg1=val2 arg2=val3
