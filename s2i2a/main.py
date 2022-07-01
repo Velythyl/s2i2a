@@ -17,9 +17,17 @@ def extract_sweeps(sweeps):
 
     param_sweep = OrderedDict()
 
-    for match in sweeps:
-        parameter, sweep = match.split("=")
-        sweep = sweep.split(',')
+    range_regex = r"range\(\d+(,\d+)?(,\d+)?\)"
+
+    for sweep in sweeps:
+        parameter, sweep = sweep.split("=")
+
+        x = re.match(range_regex, sweep)
+        if x is None:
+            sweep = sweep.split(',')
+        else:
+            sweep = list(eval(sweep))
+
         param_sweep[parameter] = sweep
 
     return param_sweep
