@@ -14,7 +14,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="s2i2a",
-    version="0.0.0",
+    version="0.0.6",
     description="Sweep to int to arguments. Map parameter sweeps to ints to program arguments. Specifically useful "
                 "for compute canada.",
     long_description=README,

@@ -1,11 +1,11 @@
 import itertools
 import os
 import re
+import sys
 from collections import OrderedDict
 import pathlib
 
 import argparse
-
 
 
 def extract_sweeps(sweeps):
@@ -39,6 +39,7 @@ def paramsweep2arglist(param_sweep):
 
     return arglist
 
+
 def arglist2intfile(arglist, cmd):
     """
     does a cartesian product over the possible arguments.
@@ -54,6 +55,7 @@ def arglist2intfile(arglist, cmd):
     with open("s2i.txt", "w") as f:
         f.write(all_sweeps)
         f.write(f"\n{cmd}")
+
 
 def s2i(sweep):
     contains_no_sweeps = True
@@ -77,7 +79,11 @@ def s2i(sweep):
     param_sweep = extract_sweeps(sweep)
     arglist = paramsweep2arglist(param_sweep)
     arglist2intfile(arglist, command)
+
+    with open("s2i2a_sweep.txt", "w") as f:
+        f.write(command + " " + " ".join(sweep))
     print("Done writing s2i.txt!")
+
 
 def i2a(integer):
     integer = int(integer[0])
@@ -111,27 +117,36 @@ def i2a(integer):
 
     exec(cmd, cmd_args, arguments if not no_sweep else [])
 
-def exec(cmd, cmd_args, arguments):
-    if cmd_args[0] == "test_s2i2a.py":
 
+def exec(cmd, cmd_args, arguments):
+    if len(cmd_args) >= 1 and cmd_args[0] == "test_s2i2a.py":
         install_path = pathlib.Path(__file__).parent.resolve()
         cmd_args[0] = f"{install_path}/{cmd_args[0]}"
 
-    os.execvp(cmd, [cmd] + cmd_args + arguments)
+    try:
+        os.execvp(cmd, [cmd] + cmd_args + arguments)
+    except FileNotFoundError as e:
+        print("Couldn't find the requested program. Did you forget to ask for python3 before your script?", file=sys.stderr)
+        raise e
+
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("direction", choices=['s2i', 'i2a'], help="Are we doing s2i or i2a")
-    parser.add_argument("other", type=str, metavar='N', nargs='*')
-    parser = parser.parse_args()
+   # parser = argparse.ArgumentParser()
+   ## parser.add_argument("direction", choices=['s2i', 'i2a'], help="Are we doing s2i or i2a")
+    #parser.add_argument("other", type=str, metavar='N', nargs='*')
+   # parser = parser.parse_args()
 
-    if parser.direction == 's2i':
-        assert parser.other, "You must define a sweep!"
-        s2i(parser.other)
-    elif parser.direction == 'i2a':
-        i2a(parser.other)
+    direction = sys.argv[1]
+    other = sys.argv[2:]
+
+    if direction == 's2i':
+        assert other, "You must define a sweep!"
+        s2i(other)
+    elif direction == 'i2a':
+        i2a(other)
     else:
         raise NotImplementedError("Could not match your request?!")
+
 
 if __name__ == "__main__":
     main()

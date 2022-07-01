@@ -1,2 +1,1 @@
-import main
-import test_s2i2a
+import s2i2a.main
